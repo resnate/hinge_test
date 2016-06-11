@@ -26,11 +26,12 @@ ActiveRecord::Schema.define(version: 20160608121335) do
   end
 
   create_table "survey_obligations", force: :cascade do |t|
-    t.integer  "survey_definitions_id"
-    t.integer  "due_at"
-    t.integer  "expires_at"
-    t.json     "submission"
+    t.integer  "user_id"
+    t.integer  "survey_definition_id"
+    t.datetime "due_at"
+    t.datetime "expires_at"
     t.datetime "submitted_at"
+    t.json     "submission"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -3,13 +3,13 @@ Rails.application.routes.draw do
   #We want: GET api/v1/surveys/:id OR :name -> single survey identified by id OR name
   root "surveys#home"
   namespace :api, :defaults => {:format => :json} do
-  	scope '/v1' do
+  	namespace :v1 do
   		scope '/surveys' do
   			get "/:identifier" => "surveys#show"
   			get "/due_this_week" => "surveys#due_this_week"
   			get "/submittable_now" => "surveys#submittable_now"
   			get "/missed" => "surveys#missed"
-  			get "/due/:week_index " => "surveys#due"
+  			get "/due/:week_index" => "surveys#due"
   			post "/submit/:identifier" => "surveys#create"
   			scope '/definitions' do
   				get "/:identifier" => "definitions#show"
@@ -18,8 +18,7 @@ Rails.application.routes.draw do
   				get "/missed" => "definitions#missed"
   				get "/due/:week_index " => "definitions#due"
   			end
-  		end
-  		
+  		end		
   	end
   end
   

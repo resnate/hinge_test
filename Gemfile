@@ -13,6 +13,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'factory_girl_rails'
 gem 'faker'
 gem 'will_paginate'
+gem 'responders'
 
 group :development, :test do
   gem 'byebug'

@@ -2,7 +2,8 @@ class SurveyObligation < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :survey_definition
-
+  validates :user_id, uniqueness: { scope: [:definition, :week_index] }
+  after_create :set_submitted_at
 =begin
 
 Overview
