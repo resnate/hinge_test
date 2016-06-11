@@ -1,0 +1,19 @@
+== README
+
+This is the final Takehome project for the Hinge Health Backend Software Engineer role.
+
+Inside this project are a couple of essential files that should get you up and running. Please look through them for notes and clues.
+
+The high level overview is as follows.
+
+We want to build a scheduled survey application consumed by mobile clients via a JSON API.
+
+Users belong to teams that go through a 12 week program. Throughout these 12 weeks, a series of surveys should be presented to users.
+
+There are two components to surveys: the definitions and obligations (look at the corresponding models).
+Definitions are created by admins. They represent one submittable survey with a schedule and expected submission format. There should only ever be about 4 or 5 in the database.
+Obligations are generated per-user-per-definition-per-week. If there's 2 definitions with 3 weeks each, and 4 users in the database, there should be 2 * 3 * 4 = 24 obligations in the database.
+
+Start by looking at the routes, migrations, models, and controllers.
+In terms of what's needed, you need to make the requested routes (routes.rb) work given with the provided code and specifications. This will require adding to the models and controllers.
+Make sure to use the survey_definitions rspec factory!
