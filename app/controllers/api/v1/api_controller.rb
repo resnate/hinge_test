@@ -3,11 +3,15 @@ module Api
 		class Api::V1::ApiController < ActionController::Base
 			respond_to :json
 			before_filter :restrict_access
+      attr_reader :current_user
 
-	private
+	   private
     	def restrict_access
       		authenticate_or_request_with_http_token do |token, options|
         		User.exists?(token: token)
+            if User.find_by_token(token)?
+              @current_user = User.find_by_token(token)
+            end
       		end
 
       		def request_http_token_authentication(realm = "Application")  

@@ -5,18 +5,29 @@ class Api::V1::SurveysController < Api::V1::ApiController
 	end
 	
 	def show
-		if Survey.where(id: params[:identifier]).count > 0
+		@user_id = @current_user.id
+		if SurveyObligation.where(id: params[:identifier], user_id: @user_id).count > 0
+			@survey = Survey.where(id: params[:identifier]).first
 			@type = "id"
 			@id = params[:identifier]
-		elsif Survey.where(id: params[:identifier]).count > 0
+			render json: @survey, except: [:user_id, :updated_at, :created_at]
+		elsif Survey.where(id: params[:identifier], user_id: @user_id).count > 0
+			@survey = Survey.where(name: params[:identifier]).first
 			@type = "name"
 			@name = params[:identifier]
+			render json: @survey, except: [:user_id, :updated_at, :created_at]
 		else
 			render text: '{"error": "not_found"}'
 		end
 	end
 
 	def due_this_week
+		@results = []
+		SurveyObligation.where(user_id: @user_id).each do |survey|
+			if survey.due_at.beginning_of_week == DateTime.now.beginning_of_week
+				@results.push(survey)
+			end
+		end
 		paginate json: @results, per_page: 5
 	end
 

@@ -1,9 +1,9 @@
 class Api::V1::DefinitionsController < Api::V1::ApiController
 	def show
-		if Survey.where(id: params[:identifier]).count > 0
+		if SurveyDefinition.where(id: params[:identifier]).count > 0
 			@type = "id"
 			@id = params[:identifier]
-		elsif Survey.where(id: params[:identifier]).count > 0
+		elsif SurveyDefinition.where(id: params[:identifier]).count > 0
 			@type = "name"
 			@name = params[:identifier]
 		else
