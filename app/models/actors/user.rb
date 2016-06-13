@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   def create_surveys
   	SurveyDefinition.all.each do |survey|
-      survey_obligation = SurveyObligation.new(definition: survey.survey_definition_id, user_id: self.id, due_at: survey.)
+      survey_obligation = SurveyObligation.new(definition: survey.survey_definition_id, user_id: self.id)
       survey_obligation.save!
   	end
   end

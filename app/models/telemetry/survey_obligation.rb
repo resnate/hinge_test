@@ -3,7 +3,7 @@ class SurveyObligation < ActiveRecord::Base
   	belongs_to :user
   	belongs_to :survey_definition
   	validates :user_id, uniqueness: { scope: [:definition, :week_index] }
-  	before_create :set_due_and_expires
+  	after_save :set_due_and_expires
 
   	def set_due_and_expires
   		user = self.user_id
