@@ -1,18 +1,19 @@
 class Api::V1::SurveysController < Api::V1::ApiController
 
+	@surveys = SurveyObligation.where(user_id: @current_user.id).all
+
 	def home
 		
 	end
 	
 	def show
-		@user_id = @current_user.id
-		if SurveyObligation.where(id: params[:identifier], user_id: @user_id).count > 0
-			@survey = Survey.where(id: params[:identifier]).first
+		if @surveys.where(id: params[:identifier]).count > 0
+			@survey = @surveys.first
 			@type = "id"
 			@id = params[:identifier]
 			render json: @survey, except: [:user_id, :updated_at, :created_at]
-		elsif Survey.where(id: params[:identifier], user_id: @user_id).count > 0
-			@survey = Survey.where(name: params[:identifier]).first
+		elsif @surveys.where(name: params[:identifier]).count > 0
+			@survey = @surveys.first
 			@type = "name"
 			@name = params[:identifier]
 			render json: @survey, except: [:user_id, :updated_at, :created_at]
@@ -23,7 +24,7 @@ class Api::V1::SurveysController < Api::V1::ApiController
 
 	def due_this_week
 		@results = []
-		SurveyObligation.where(user_id: @user_id).each do |survey|
+		@surveys.each do |survey|
 			if survey.due_at.beginning_of_week == DateTime.now.beginning_of_week
 				@results.push(survey)
 			end
@@ -33,7 +34,7 @@ class Api::V1::SurveysController < Api::V1::ApiController
 
 	def submittable_now
 		@results = []
-		SurveyObligation.where(user_id: @user_id).each do |survey|
+		@surveys.each do |survey|
 			if survey.valid_submission
 				@results.push(survey)
 			end
@@ -42,10 +43,13 @@ class Api::V1::SurveysController < Api::V1::ApiController
 	end
 
 	def due
-		if Survey.where(id: params[:identifier]).count > 0
-		else
-			render text: '{"error": "not_found"}'
+		@results = []
+		start = Team.find(@current_user.team_id).program_starts_at
+		due = start + (7 * params[:week_index])
+		@surveys.where(due_at: due).each do |survey|
+			@results.push(survey)
 		end
+		paginate json: @results, per_page: 5
 	end
 =begin
 1) All responses sent back to the requester in JSON

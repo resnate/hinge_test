@@ -18,5 +18,12 @@ class Api::V1::DefinitionsController < Api::V1::ApiController
 	end
 
 	def due
+		@results = []
+		SurveyDefinition.all.each do |survey|
+			if survey.week_indices.include?(params[:week_index])
+				@results.push(survey)
+			end
+		end
+		paginate json: @results, per_page: 5
 	end
 end
