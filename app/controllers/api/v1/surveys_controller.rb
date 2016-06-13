@@ -32,6 +32,16 @@ class Api::V1::SurveysController < Api::V1::ApiController
 		paginate json: @results, per_page: 5
 	end
 
+	def missed
+		@results = []
+		@surveys.each do |survey|
+			if survey.expires_at < DateTime.now && survey.submitted_at.nil?
+				@results.push(survey)
+			end
+		end
+		paginate json: @results, per_page: 5
+	end
+
 	def submittable_now
 		@results = []
 		@surveys.each do |survey|
