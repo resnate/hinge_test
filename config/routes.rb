@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   			get "/submittable_now" => "surveys#submittable_now"
   			get "/missed" => "surveys#missed"
   			get "/due/:week_index" => "surveys#due"
-  			post "/submit/:identifier" => "surveys#create"
+  			post "/submit/:name" => "surveys#submit"
   			scope '/definitions' do
   				get "/:identifier" => "definitions#show"
   				get "/due_this_week" => "definitions#due_this_week"
@@ -31,6 +31,10 @@ Rails.application.routes.draw do
   # for instance, api/v1/surveys/definitions/due_this_week is valid
   #a request without /definitions returns the list of obligations themselves
 
-  #We want: POST api/v1/surveys/submit/:id OR :name -> submit just
+  #We want: POST api/v1/surveys/submit/:name -> where :name is the definition name. Since only one obligation of a survey may exist per week per person, you should be able to get a handle on that obligation using just the name.
+  # You should of course handle illegal submission attempts.
+  #A submission JSON body could look like {question_1: answer_1, ..., question_n: answer_n}
+  #By the time you render a response, you should have the_appropriate_obligation.submission ==> {question_1: answer_1, ..., question_n: answer_n}
+
 
 end

@@ -52,6 +52,19 @@ class Api::V1::SurveysController < Api::V1::ApiController
 		paginate json: @results, per_page: 5
 	end
 
+	def submit
+		@results = []
+		@surveys.each do |survey|
+			if SurveyDefinition.find(survey.survey_definition.id).name == params[:name]
+				if survey.valid_submission?
+					@results.push(survey)
+				else
+					render text: '{"error": "invalid format for answers"}'
+				end
+			end
+		end
+	end
+
 	def due
 		@results = []
 		start = Team.find(@current_user.team_id).program_starts_at
