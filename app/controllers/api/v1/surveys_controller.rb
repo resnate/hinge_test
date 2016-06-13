@@ -32,6 +32,12 @@ class Api::V1::SurveysController < Api::V1::ApiController
 	end
 
 	def submittable_now
+		@results = []
+		SurveyObligation.where(user_id: @user_id).each do |survey|
+			if survey.valid_submission
+				@results.push(survey)
+			end
+		end
 		paginate json: @results, per_page: 5
 	end
 
