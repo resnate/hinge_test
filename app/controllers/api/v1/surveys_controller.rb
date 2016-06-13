@@ -35,7 +35,7 @@ class Api::V1::SurveysController < Api::V1::ApiController
 	def submittable_now
 		@results = []
 		@surveys.each do |survey|
-			if survey.valid_submission
+			if survey.valid_submission?
 				@results.push(survey)
 			end
 		end
