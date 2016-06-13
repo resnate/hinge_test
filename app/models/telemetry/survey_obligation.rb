@@ -3,7 +3,16 @@ class SurveyObligation < ActiveRecord::Base
   	belongs_to :user
   	belongs_to :survey_definition
   	validates :user_id, uniqueness: { scope: [:definition, :week_index] }
-  	after_create :set_submitted_at
+  	before_create :set_due_and_expires
+
+  	def set_due_and_expires
+  		user = self.user_id
+  		program_start = Team.find(user.team_id).program_starts_at
+  		defined = SurveyDefinition.find(self.survey_definition_id)
+  		due = program_start + (7 * self.week_index)
+  		expiry = (program_start.to_i + lateness_allowed).to_datetime
+  		self.update_columns(due_at: due, expires_at: expiry)
+  	end
 
   	def valid_submission
   		formats = SurveyDefinition.find(self.survey_definition_id)
@@ -17,6 +26,7 @@ class SurveyObligation < ActiveRecord::Base
   		if false_subs.count > 0
   			return false
   		else
+  			self.update_column(:submitted_at, DateTime.now)
   			return true
   		end
   	end
